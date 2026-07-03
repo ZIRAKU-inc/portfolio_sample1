@@ -67,6 +67,84 @@
   /* Scroll indicator */
   .scroll-hint { animation: floatY 2s ease-in-out infinite; }
 
+  /* ── Hamburger menu ── */
+  #menu-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    background: none;
+    border: 1px solid rgba(0,217,255,.3);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  #menu-btn span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: #00D9FF;
+    transition: transform .3s, opacity .3s;
+  }
+  #menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  #menu-btn.open span:nth-child(2) { opacity: 0; }
+  #menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    /* Header */
+    #header-inner { padding: 14px 20px !important; }
+    #nav {
+      display: none !important;
+      position: fixed;
+      top: 61px; left: 0; right: 0;
+      flex-direction: column;
+      background: rgba(6,8,13,.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,217,255,.15);
+      padding: 8px 0 16px;
+      z-index: 99;
+    }
+    #nav.open { display: flex !important; }
+    #nav a { padding: 14px 20px !important; font-size: 15px !important; border-radius: 0 !important; }
+    #header-contact { display: none !important; }
+    #menu-btn { display: flex; }
+
+    /* Section padding */
+    #problem, #tech, #services, #achievements, #contact,
+    section { padding-top: 80px !important; padding-bottom: 80px !important;
+              padding-left: 20px !important; padding-right: 20px !important; }
+
+    /* Hero */
+    #hero-inner { padding: 100px 20px 60px !important; }
+
+    /* Problem terminal */
+    #problem-terminal { font-size: 13px !important; padding: 18px 16px !important; line-height: 2 !important; }
+
+    /* Process - 2 cols on tablet */
+    #process-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 32px !important; row-gap: 40px !important; }
+    #process-line { display: none !important; }
+
+    /* Team */
+    #team-inner { grid-template-columns: 1fr !important; gap: 32px !important; }
+    #team-canvas { height: 260px !important; }
+
+    /* Footer */
+    footer { padding: 28px 20px !important; }
+  }
+
+  @media (max-width: 480px) {
+    /* Hero CTA */
+    #hero-ctas { flex-direction: column !important; }
+    #hero-ctas a { text-align: center !important; }
+
+    /* Process - 1 col on small */
+    #process-grid { grid-template-columns: 1fr !important; }
+  }
+
+
   /* Company name redaction */
   .redacted {
     display: inline-block;
@@ -103,8 +181,8 @@
 
 <!-- Header -->
 <header id="header">
-  <div style="max-width:1280px;margin:0 auto;padding:18px 32px;display:flex;align-items:center;justify-content:space-between">
-    <div style="font-family:'Space Grotesk',monospace;font-weight:700;font-size:20px;letter-spacing:.02em;color:#fff;display:flex;align-items:center;gap:8px">
+  <div id="header-inner" style="max-width:1280px;margin:0 auto;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px">
+    <div style="font-family:'Space Grotesk',monospace;font-weight:700;font-size:20px;letter-spacing:.02em;color:#fff;display:flex;align-items:center;gap:8px;flex-shrink:0">
       <span style="color:#00D9FF">&lt;</span><span class="redacted" style="width:72px;height:22px"></span><span style="color:#00D9FF">/&gt;</span>
     </div>
     <nav style="display:flex;gap:4px" id="nav">
@@ -114,7 +192,10 @@
       <a href="#achievements" style="padding:8px 14px;font-size:13px;font-weight:500;letter-spacing:.03em;color:#B7C0D4;text-decoration:none;border-radius:2px;transition:background .2s,color .2s">実績</a>
       <a href="#contact" style="padding:8px 14px;font-size:13px;font-weight:500;letter-spacing:.03em;color:#B7C0D4;text-decoration:none;border-radius:2px;transition:background .2s,color .2s">お問い合わせ</a>
     </nav>
-    <a href="#contact" class="contact-btn" style="font-family:'Space Grotesk',monospace;font-size:13px;font-weight:600;color:#06080d;background:#00D9FF;padding:9px 18px;text-decoration:none;letter-spacing:.02em;border:1px solid #00D9FF;transition:background .2s,color .2s">お問い合わせ</a>
+    <a id="header-contact" href="#contact" class="contact-btn" style="font-family:'Space Grotesk',monospace;font-size:13px;font-weight:600;color:#06080d;background:#00D9FF;padding:9px 18px;text-decoration:none;letter-spacing:.02em;border:1px solid #00D9FF;transition:background .2s,color .2s;flex-shrink:0">お問い合わせ</a>
+    <button id="menu-btn" aria-label="メニュー" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
 
@@ -129,14 +210,14 @@
     <section style="position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;border-bottom:1px solid rgba(0,217,255,.15)">
       <div id="hero-mount" style="position:absolute;inset:0;z-index:0"></div>
       <div style="position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at 50% 40%,transparent 0%,rgba(6,8,13,.4) 60%,#06080d 100%)"></div>
-      <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:120px 32px 80px;width:100%">
+      <div id="hero-inner" style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:120px 32px 80px;width:100%">
         <div style="font-family:'Space Grotesk',monospace;font-size:12px;letter-spacing:.25em;color:#00D9FF;margin-bottom:20px">SYSTEM DEVELOPMENT PARTNER</div>
         <h1 style="font-size:clamp(36px,6vw,76px);line-height:1.25;font-weight:900;margin:0 0 28px;max-width:900px;min-height:calc(clamp(36px,6vw,76px)*1.25*2)">
           <span id="hero-line1"></span><span id="hero-caret1" style="animation:caretBlink 1s step-end infinite;color:#00D9FF">_</span><br>
           <span id="hero-line2" style="color:#00D9FF"></span><span id="hero-caret2" style="animation:caretBlink 1s step-end infinite;color:#00D9FF;display:none">_</span>
         </h1>
         <p style="font-size:17px;line-height:1.9;color:#AEB8CC;max-width:560px;margin:0 0 44px">Webシステム・業務システムの受託開発から、SaaSプロダクト開発、DX支援まで、要件定義から運用保守まで上流工程から伴走するテクノロジーパートナーです。</p>
-        <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <div id="hero-ctas" style="display:flex;gap:16px;flex-wrap:wrap">
           <a href="#contact" class="cta-primary" style="font-family:'Space Grotesk',monospace;font-weight:600;font-size:14px;letter-spacing:.02em;background:#00D9FF;color:#06080d;padding:16px 30px;text-decoration:none;position:relative;overflow:hidden;transition:background .2s,color .2s">無料相談を申し込む →</a>
           <a href="#" class="cta-secondary" style="font-family:'Space Grotesk',monospace;font-weight:600;font-size:14px;letter-spacing:.02em;background:transparent;color:#E7EBF3;padding:16px 30px;text-decoration:none;border:1px solid rgba(231,235,243,.3);transition:border-color .2s,color .2s">資料ダウンロード</a>
         </div>
@@ -210,8 +291,8 @@
       <div style="max-width:1280px;margin:0 auto">
         <div style="font-family:'Space Grotesk',monospace;font-size:12px;letter-spacing:.25em;color:#00D9FF;margin-bottom:16px">// PROCESS</div>
         <h2 style="font-size:clamp(26px,3.6vw,42px);font-weight:900;margin:0 0 64px">開発プロセス</h2>
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative">
-          <div style="position:absolute;top:19px;left:10%;right:10%;height:2px;background:linear-gradient(90deg,#4361EE,#00D9FF);opacity:.4"></div>
+        <div id="process-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative">
+          <div id="process-line" style="position:absolute;top:19px;left:10%;right:10%;height:2px;background:linear-gradient(90deg,#4361EE,#00D9FF);opacity:.4"></div>
           <div style="position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;padding:0 8px">
             <div style="width:40px;height:40px;border-radius:50%;background:#06080d;border:2px solid #00D9FF;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',monospace;font-weight:700;color:#00D9FF;box-shadow:0 0 16px rgba(0,217,255,.5);z-index:1">01</div>
             <div style="font-weight:700;font-size:15px;color:#fff">要件定義</div>
@@ -290,7 +371,7 @@
 
     <!-- TEAM -->
     <section style="position:relative;padding:140px 32px;border-bottom:1px solid rgba(0,217,255,.1);background:linear-gradient(180deg,rgba(67,97,238,.04),transparent)">
-      <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:minmax(280px,1fr) minmax(320px,1.2fr);gap:56px;align-items:center">
+      <div id="team-inner" style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:minmax(280px,1fr) minmax(320px,1.2fr);gap:56px;align-items:center">
         <div>
           <div style="font-family:'Space Grotesk',monospace;font-size:12px;letter-spacing:.25em;color:#00D9FF;margin-bottom:16px">// TEAM</div>
           <h2 style="font-size:clamp(26px,3.6vw,42px);font-weight:900;margin:0 0 20px">開発体制</h2>
@@ -738,6 +819,20 @@ if (!reducedMotion && window.THREE) {
   }
   animate();
 }
+
+// ── Hamburger menu ───────────────────────────────────────────────────────────
+function toggleMenu() {
+  const nav = document.getElementById('nav');
+  const btn = document.getElementById('menu-btn');
+  nav.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+document.getElementById('nav').querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.getElementById('nav').classList.remove('open');
+    document.getElementById('menu-btn').classList.remove('open');
+  });
+});
 
 // ── Contact form ────────────────────────────────────────────────────────────
 function handleSubmit(e) {
